@@ -8,6 +8,10 @@ use Auth;
 
 class UserController extends Controller
 {
+    public function index(){
+        return response()->json(['users' => User::all()]);
+    }
+
     public function store(Request $request){
         $user = User::where('email', $request->email)->first();
         if($user) return response()->json(['message' => 'Invalid email'], 500);

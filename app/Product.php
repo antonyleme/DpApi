@@ -17,4 +17,8 @@ class Product extends Model
     public function category(){
         return $this->belongsTo('App\Category');
     }
+
+    public function demands(){
+        return $this->belongsToMany('App\UsersDemand', 'demands_products', 'product_id', 'id')->withPivot(['qtd', 'price']);
+    }
 }

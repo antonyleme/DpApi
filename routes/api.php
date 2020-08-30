@@ -38,7 +38,14 @@ Route::get('categories/{id}', 'CategoryController@products');
 Route::delete('categories/{id}', 'CategoryController@destroy');
 Route::put('categories/{id}', 'CategoryController@update');
 
+Route::get('users', 'UserController@index');
 Route::put('users', 'UserController@update');
 Route::get('users/demands', 'UsersDemandController@userDemands');
 
+Route::get('demands', 'UsersDemandController@index');
+
 Route::post('demands', 'CheckoutController@registerDemand');
+
+Route::get('dashboard', 'DemandsDashboardController@stats');
+Route::get('dashboard/demands/{status}', 'DemandsDashboardController@demands');
+Route::put('dashboard/demands/{id}/{status}', 'DemandsDashboardController@updateStatus');

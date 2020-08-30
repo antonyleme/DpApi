@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddChargeforDemandsColumn extends Migration
+class AddQtdDemandsProductsColumn extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddChargeforDemandsColumn extends Migration
      */
     public function up()
     {
-        Schema::table('users_demands', function (Blueprint $table) {
-            $table->float('charge_for')->default(0);
+        Schema::table('demands_products', function (Blueprint $table) {
+            $table->integer('qtd');
         });
     }
 
@@ -25,8 +25,8 @@ class AddChargeforDemandsColumn extends Migration
      */
     public function down()
     {
-        Schema::table('users_demands', function (Blueprint $table) {
-            $table->dropColumn('charge_for');
+        Schema::table('demands_products', function (Blueprint $table) {
+            $table->dropColumn('qtd');
         });
     }
 }

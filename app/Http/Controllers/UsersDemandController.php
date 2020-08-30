@@ -16,7 +16,7 @@ class UsersDemandController extends Controller
      */
     public function index()
     {
-        return response()->json(['demands' => UsersDemand::all()]);
+        return response()->json(['demands' => UsersDemand::orderBy('id', 'DESC')->paginate(10)]);
     }
 
     /**
