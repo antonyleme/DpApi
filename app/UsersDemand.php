@@ -14,7 +14,7 @@ class UsersDemand extends Model
     }
 
     public function products(){
-        return $this->belongsToMany('App\Product', 'demands_products', 'users_demand_id', 'id')->withPivot(['qtd', 'price']);
+        return $this->belongsToMany('App\Product', 'demands_products', 'users_demand_id')->withPivot(['qtd', 'price']);
     }
 
     public function getUserAttribute(){

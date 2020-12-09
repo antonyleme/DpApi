@@ -18,7 +18,7 @@ class CreateUsersDemandsTable extends Migration
             $table->bigInteger('user_id')->unsigned()->nullable();
             $table->bigInteger('product_id')->unsigned()->nullable();
             $table->enum('status', ['received', 'refused', 'accepted', 'delivered']);
-            $table->enum('payment_type', ['app', 'delivery']);
+            $table->enum('payment_type', ['app', 'delivery', 'delivery-card', 'balcony']);
             $table->string('cep')->nullable();
             $table->string('state')->nullable();
             $table->string('city')->nullable();

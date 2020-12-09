@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Product;
+use App\Banner;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class BannerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return response()->json(['products' => Product::orderBy('id', 'DESC')->get()]);
+        return response()->json(['banners' => Banner::orderBy('id', 'DESC')->get()]);
     }
 
     /**
@@ -26,7 +26,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $this->uploadFile();
-        return response()->json(['product' => Product::create($request->all())]);
+        return response()->json(['banner' => Banner::create($request->all())]);
     }
 
     public function uploadFile(){
@@ -36,9 +36,9 @@ class ProductController extends Controller
             $extension = request()->file('img')->getClientOriginalExtension();
             $fileName = pathinfo($originName, PATHINFO_FILENAME).'_'.time().'.'.$extension;
 
-            request()->file('img')->move(public_path('img/'), $fileName);
+            request()->file('img')->move(public_path('img/banners/'), $fileName);
             
-            request()->merge(['imgPath' => 'img/'.$fileName]);
+            request()->merge(['imgPath' => 'img/banners/'.$fileName]);
 
             return true;
         }
@@ -54,7 +54,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        return response()->json(['product' => Product::find($id)]);
+        return response()->json(['banner' => Banner::find($id)]);
     }
 
     /**
@@ -66,10 +66,10 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $product = Product::find($id);
-        $product->fill($request->all())->save();
+        $banner = Banner::find($id);
+        $banner->fill($request->all())->save();
 
-        return response()->json(['product' => $product]);
+        return response()->json(['banner' => $banner]);
     }
 
     /**
@@ -80,14 +80,6 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        Product::find($id)->delete();
-    }
-
-    public function productEntry(Request $request, $id){
-        $product = Product::find($id);
-        $product->qtd += $request->qtd;
-        $product->save();
-
-        return response()->json(['product' => $product]);
+        Banner::find($id)->delete();
     }
 }

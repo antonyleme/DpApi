@@ -14,6 +14,6 @@ class Category extends Model
     }
 
     public function getProductsAttribute(){
-        return $this->products()->take(4)->get();
+        return $this->products()->orderBy('qtd', 'DESC')->take(4)->get();
     }
 }

@@ -29,6 +29,6 @@ class CategoryController extends Controller
     }
 
     public function products($id){
-        return response()->json(['products' => Category::find($id)->products()->get()]);
+        return response()->json(['products' => Category::find($id)->products()->orderBy('qtd', 'DESC')->get()]);
     }
 }

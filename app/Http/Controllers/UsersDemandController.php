@@ -19,6 +19,11 @@ class UsersDemandController extends Controller
         return response()->json(['demands' => UsersDemand::orderBy('id', 'DESC')->paginate(10)]);
     }
 
+    public function indexByDate($date)
+    {
+        return response()->json(['demands' => UsersDemand::orderBy('id', 'DESC')->whereDate('created_at', $date)->get()]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
