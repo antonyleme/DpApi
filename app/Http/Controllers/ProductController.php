@@ -64,9 +64,11 @@ class ProductController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $product = Product::find($id);
+        //return $request;
+        $this->uploadFile();
+        $product = Product::find($request->id);
         $product->fill($request->all())->save();
 
         return response()->json(['product' => $product]);

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\UsersDemand;
 use App\Bill;
 use Carbon\Carbon;
+use App\DeliveryTax;
 
 class FinanceController extends Controller
 {
@@ -26,8 +27,11 @@ class FinanceController extends Controller
                 if($demand->payment_type == 'balcony'){
                     $totalBalcony += $product->pivot->price * $product->pivot->qtd;
                 } else {
-                    $totalApp += $product->pivot->price * $product->pivot->qtd;
+                    $totalApp += $product->pivot->price * $product->pivot->qtd + DeliveryTax::first()->value;
                 }
+            }
+            if($demand->payment_type != 'balcony'){
+                $totalReceived += DeliveryTax::first()->value;
             }
         }
 
@@ -57,6 +61,9 @@ class FinanceController extends Controller
                     $totalApp += $product->pivot->price * $product->pivot->qtd;
                 }
             }
+            if($demand->payment_type != 'balcony'){
+                $totalReceived += DeliveryTax::first()->value;
+            }
         }
 
         $totalBills = Bill::whereMonth('created_at', Carbon::parse($date)->month)
@@ -85,6 +92,9 @@ class FinanceController extends Controller
                 } else {
                     $totalApp += $product->pivot->price * $product->pivot->qtd;
                 }
+            }
+            if($demand->payment_type != 'balcony'){
+                $totalReceived += DeliveryTax::first()->value;
             }
         }
 

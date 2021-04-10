@@ -10,6 +10,7 @@ use App\User;
 use Carbon\Carbon;
 use App\CreditPayment;
 use App\Notification;
+use App\DeliveryTax;
 
 class DemandsDashboardController extends Controller
 {
@@ -22,10 +23,22 @@ class DemandsDashboardController extends Controller
     }
 
     public function stats(){
-        $totalValue = number_format(DemandsProduct::whereDate('demands_products.created_at', Carbon::today())
+        $totalValue = 0;
+        $demands = DemandsProduct::whereDate('demands_products.created_at', Carbon::today())
                         ->join('users_demands', 'users_demands.id', 'demands_products.users_demand_id')
                         ->where('users_demands.status', '<>', 'refused')
-                        ->sum('demands_products.price'), 2);
+                        ->get();
+        
+        $deliveryTax = DeliveryTax::first()->value;
+
+        foreach($demands as $demand){
+            $totalValue += $demand->price * $demand->qtd;
+
+            if($demand->status != 'balcony'){
+                $totalValue += $deliveryTax;
+            }
+        }
+        
         $totalDemands = UsersDemand::whereDate('created_at', Carbon::today())->count();
         $totalUsers = User::all()->count();
         $totalProducts = Product::all()->count();
@@ -80,9 +93,26 @@ class DemandsDashboardController extends Controller
     }
 
     public function storeBalconySale(Request $request){
-        $userDemand = UsersDemand::create([
+        /*$userDemand = UsersDemand::create([
             'status' => 'balcony',
             'payment_type' => 'balcony'
+        ]);*/
+
+        //$userDemand = UsersDemand::create($request->all());
+
+        $userDemand = UsersDemand::create([
+            'status' => $request->status,
+            'client_name' => $request->client_name,
+            'payment_type' => $request->payment_type,
+            'cep' => $request->cep,
+            'state' => $request->state,
+            'city' => $request->city,
+            'neighborhood' => $request->neighborhood,
+            'street' => $request->street,
+            'number' => $request->number,
+            'complement' => $request->complement,
+            'charge_id' => $request->payment_type == 'app' ? $charge->id : null,
+            'charge_for' => $request->charge_for ? $request->charge_for : 0,
         ]);
 
         $items = $request->items;

@@ -7,6 +7,7 @@ use App\UsersDemand;
 use App\DemandsProduct;
 use App\CreditPayment;
 use App\Product;
+use Carbon\Carbon;
 use Auth;
 
 class CheckoutController extends Controller
@@ -29,6 +30,52 @@ class CheckoutController extends Controller
 
     public function registerDemand(Request $request){
 
+        $now = Carbon::now();
+        $segTerOpen = Carbon::parse("01/01/2020 15:00:00");
+        $segTerClose = Carbon::parse("01/01/2020 22:00:00");
+
+        $quaSexOpen = Carbon::parse("01/01/2020 15:00:00");
+        $quaSexClose = Carbon::parse("01/01/2020 23:00:00");
+
+        $sabOpen = Carbon::parse("01/01/2020 11:00:00");
+        $sabClose = Carbon::parse("01/01/2020 23:00:00");
+
+        $domOpen = Carbon::parse("01/01/2020 11:00:00");
+        $domClose = Carbon::parse("01/01/2020 19:00:00");
+
+        $nowTime = $now->format('H');
+        $nowDay = $now->dayOfWeek;
+
+        if ($nowDay == 0) {
+            if (
+                $nowTime < $domOpen->format('H') ||
+                $nowTime >= $domClose->format('H')
+            ) {
+                return response()->json(['message' => 'Out of time'], 400);
+            }
+        } else if ($nowDay >= 1 && $nowDay <= 2) {
+            if (
+                $nowTime < $segTerOpen->format('H') ||
+                $nowTime >= $segTerClose->format('H')
+            ) {
+                return response()->json(['message' => 'Out of time'], 400);
+            }
+        } else if ($nowDay >= 3 && $nowDay <= 5) {
+            if (
+                $nowTime < $quaSexOpen->format('H') ||
+                $nowTime >= $quaSexClose->format('H')
+            ) {
+                return response()->json(['message' => 'Out of time'], 400);
+            }
+        } else if ($nowDay == 6) {
+            if (
+                $nowTime < $sabOpen->format('H') ||
+                $nowTime >= $sabClose->format('H')
+            ) {
+                return response()->json(['message' => 'Out of time'], 400);
+            }
+        }
+
         if($request->payType == 'app'){
             $charge = $this->paymentProcess($request);
 
@@ -49,6 +96,8 @@ class CheckoutController extends Controller
             'number' => $request->number,
             'complement' => $request->complement,
             'charge_id' => $request->payType == 'app' ? $charge->id : null,
+            'charge_for' => $request->chargeFor ? $request->chargeFor : 0,
+            'observations' => $request->observations,
         ]);
 
         $items = $request->items;
